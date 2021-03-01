@@ -1571,10 +1571,6 @@ void CmndTempMeasuredSet(void)
 void PutTempTargetSet(int16_t temp)
 {
   int16_t value;
-  value = ((int16_t)(temp)/2);
-
-  Serial.print("mail box temp/2 : ");
-  Serial.println(value);
 
   value = (Thermostat[0].temp_target_level) + ((int16_t)(temp)/2);
 
@@ -1586,12 +1582,13 @@ void PutTempTargetSet(int16_t temp)
     Thermostat[0].temp_target_level = value;
   }
   value = Thermostat[0].temp_target_level;
-
+  PrintTM1637Float(value);
   //Serial.print("PutTempTargetSet");
   //Serial.println(value);
   //ResponseCmndFloat((float)value / 10, 1);
   //ResponseSetTempFloat((float)value / 10, 1);
   //Response_P(PSTR("{\"%s\":%*_f}"), "TempTargetSet", 1, &value);
+
   ResponseCmndFloat((float)value / 10, 1);
 }
 

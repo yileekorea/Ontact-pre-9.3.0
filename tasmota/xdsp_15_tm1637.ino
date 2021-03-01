@@ -252,6 +252,52 @@ bool CmndTM1637Number(bool clear) {
 * commands: DisplayFloat   num [,position {0-(TM1637Data.num_digits-1)} [,precision {0-TM1637Data.num_digits} [,length {1 to TM1637Data.num_digits}]]]
 *           DisplayFloatNC num [,position {0-(TM1637Data.num_digits-1)} [,precision {0-TM1637Data.num_digits} [,length {1 to TM1637Data.num_digits}]]]    // "NC" --> "No Clear"
 \*********************************************************************************************/
+void PrintTM1637Float(int16_t value)
+{
+  float fnum = 0.0f;
+  uint8_t length = 4;
+  uint8_t precision = 4;
+  uint8_t position = 0;
+
+  fnum = value;
+  fnum /= 10;
+  Serial.println(fnum);
+
+  TM1637ClearDisplay();
+
+  char txt[30];
+  ext_snprintf_P(txt, sizeof(txt), PSTR("%*_f"), 4, &fnum); //precision=4
+
+
+  uint8_t rawBytes[1];
+  uint8_t wNegative = 0;
+
+  if(txt[0] == '-') { //ontact max float digits == 2
+    Serial.println("negative number");
+    wNegative = 1;
+  }
+  if(txt[wNegative+1] == '.') { //ontact max float digits == 2
+    position += 1;
+    precision -= (2-wNegative);
+    length -= (2-wNegative);
+  } else{             //ontact max float digits == 3
+    precision -= (1-wNegative);
+    length -= (1-wNegative);
+  }
+
+  for(uint32_t i=(0+wNegative), j=0; i<length; i++, j++) {
+    if(txt[i-wNegative] == 0) break;
+    rawBytes[0] = tm1637display->encode(txt[i]);
+    if(txt[i+1] == '.') {
+      rawBytes[0] = rawBytes[0] | 128;
+      i++;
+      length++;
+    }
+    if((j+position) > TM1637Data.num_digits) break;
+    tm1637display->printRaw(rawBytes, 1, j+position);
+   }
+}
+
 bool CmndTM1637Float(bool clear) {
 
   char sNum[CMD_MAX_LEN];
