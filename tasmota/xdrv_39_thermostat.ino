@@ -1568,11 +1568,24 @@ void CmndTempMeasuredSet(void)
   }
 }
 
-void PutTempTargetSet(int16_t temp)
+//void PutTempTargetSet(int16_t temp)
+void PutTempTargetSet(float temp)
 {
-  int16_t value;
+//  int16_t value;
+  float value;
+  value = (float)(temp)/2;
+  if(value == 0.5) {
+    value = 1;
+  }
+  else if(value == -0.5) {
+    value = -1;
+  }
 
-  value = (Thermostat[0].temp_target_level) + ((int16_t)(temp)/2);
+  Serial.print("float temp/2 = ");
+  Serial.println(value);
+
+  //value = (Thermostat[0].temp_target_level) + ((float)(temp)/2);
+  value += (Thermostat[0].temp_target_level);
 
 //  if ((value >= -1000)
 //    && (value <= 1000)
@@ -1582,14 +1595,14 @@ void PutTempTargetSet(int16_t temp)
     Thermostat[0].temp_target_level = value;
   }
   value = Thermostat[0].temp_target_level;
-  PrintTM1637Float(value);
+  PrintTM1637Float(value);  //ontact
+
   //Serial.print("PutTempTargetSet");
   //Serial.println(value);
   //ResponseCmndFloat((float)value / 10, 1);
   //ResponseSetTempFloat((float)value / 10, 1);
   //Response_P(PSTR("{\"%s\":%*_f}"), "TempTargetSet", 1, &value);
-
-  ResponseCmndFloat((float)value / 10, 1);
+  //ResponseCmndFloat((float)value / 10, 1);
 }
 
 void CmndTempTargetSet(void)
