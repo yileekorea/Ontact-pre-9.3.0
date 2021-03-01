@@ -294,9 +294,25 @@ bool CmndTM1637Float(bool clear) {
 
   AddLog(LOG_LEVEL_DEBUG, PSTR("TM7: num %4_f, prec %d, len %d"), &fnum, precision, length);
 
+
   uint8_t rawBytes[1];
-  for(uint32_t i=0, j=0; i<length; i++, j++) {
-    if(txt[i] == 0) break;
+  uint8_t wNegative = 0;
+
+  if(txt[0] == '-') { //ontact max float digits == 2
+    Serial.println("negative number");
+    wNegative = 1;
+  }
+  if(txt[wNegative+1] == '.') { //ontact max float digits == 2
+    position += 1;
+    precision -= (2-wNegative);
+    length -= (2-wNegative);
+  } else{             //ontact max float digits == 3
+    precision -= (1-wNegative);
+    length -= (1-wNegative);
+  }
+
+  for(uint32_t i=(0+wNegative), j=0; i<length; i++, j++) {
+    if(txt[i-wNegative] == 0) break;
     rawBytes[0] = tm1637display->encode(txt[i]);
     if(txt[i+1] == '.') {
       rawBytes[0] = rawBytes[0] | 128;
