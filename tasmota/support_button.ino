@@ -202,6 +202,8 @@ void ButtonHandler(void) {
       XdrvMailbox.payload = button;
       if (XdrvCall(FUNC_BUTTON_PRESSED)) {
         // Serviced
+        //Serial.print("XdrvMailbox.payload : ");
+        //Serial.println(XdrvMailbox.payload);
       }
 #ifdef ESP8266
       else if (SONOFF_4CHPRO == TasmotaGlobal.module_type) {
@@ -318,11 +320,20 @@ void ButtonHandler(void) {
                     }
                     if (!Settings.flag3.mqtt_buttons) {         // SetOption73 - Detach buttons from relays and enable MQTT action state for multipress
                       if (Button.press_counter[button_index] == 1) {  // By default first press always send a TOGGLE (2)
+
+                        AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_MULTI_PRESS " %d"), button_index +1, Button.press_counter[button_index]);
+
                         ExecuteCommandPower(button_index + Button.press_counter[button_index], POWER_TOGGLE, SRC_BUTTON);
+                        //ontact
+                        //SendKey(KEY_BUTTON, button_index +1, Button.press_counter[button_index]);    // 2,3,4 and 5 press send just the key value (11,12,13 and 14) for rules
+
                       } else {
                         SendKey(KEY_BUTTON, button_index +1, Button.press_counter[button_index] +9);    // 2,3,4 and 5 press send just the key value (11,12,13 and 14) for rules
+                        AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_MULTI_PRESS " %d"), button_index +1, Button.press_counter[button_index] +9);
+
                         if (0 == button_index) {               // BUTTON1 can toggle up to 5 relays if present. If a relay is not present will send out the key value (2,11,12,13 and 14) for rules
                           bool valid_relay = PinUsed(GPIO_REL1, Button.press_counter[button_index]-1);
+                          AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_MULTI_PRESS " %d"), button_index +1, Button.press_counter[button_index] -1);
 #ifdef ESP8266
                           if ((SONOFF_DUAL == TasmotaGlobal.module_type) || (CH4 == TasmotaGlobal.module_type)) {
                             valid_relay = (Button.press_counter[button_index] <= TasmotaGlobal.devices_present);
@@ -339,7 +350,10 @@ void ButtonHandler(void) {
                   } else {    // 6 press start wificonfig 2
                     if (!Settings.flag.button_restrict) {  // SetOption1  - Control button multipress
                       snprintf_P(scmnd, sizeof(scmnd), PSTR(D_CMND_WIFICONFIG " 2"));
+                      //Serial.println(scmnd);
+                      //Serial.println("D_CMND_WIFICONFIG");  //ontact
                       ExecuteCommand(scmnd, SRC_BUTTON);
+
                     }
                   }
                   if (Settings.flag3.mqtt_buttons) {   // SetOption73 (0) - Decouple button from relay and send just mqtt topic

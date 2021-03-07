@@ -521,6 +521,9 @@ void Ds18x20Show(bool json)
 #ifdef USE_WEBSERVER
       } else {
         WSContentSend_Temp(ds18x20_types, ds18x20_sensor[index].temperature);
+        float value = ds18x20_sensor[index].temperature;  //ontact
+        value *= 10;
+        PrintTM1637Float(value);  //ontact
 #endif  // USE_WEBSERVER
       }
     }

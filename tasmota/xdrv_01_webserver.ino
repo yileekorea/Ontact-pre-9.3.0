@@ -1239,7 +1239,7 @@ bool HandleRootStatusRefresh(void)
   WSContentBegin(200, CT_HTML);
 #endif  // USE_WEB_SSE
   WSContentSend_P(PSTR("{t}"));
-  XsnsCall(FUNC_WEB_SENSOR);
+  XsnsCall(FUNC_WEB_SENSOR);  //ontact
   XdrvCall(FUNC_WEB_SENSOR);
 
   WSContentSend_P(PSTR("</table>"));
