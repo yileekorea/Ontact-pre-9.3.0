@@ -603,6 +603,14 @@ void Scheduler(void) {
     XsnsCall(FUNC_EVERY_SECOND);
   }
 
+  static uint32_t state_minute = 0;                // State second timer
+  if (TimeReached(state_minute)) {
+    SetNextTimeInterval(state_minute, (1000*60));
+    XsnsCall(FUNC_EVERY_MINUTE);
+  }
+
+
+
   if (!TasmotaGlobal.serial_local) { SerialInput(); }
 
 #ifdef USE_ARDUINO_OTA

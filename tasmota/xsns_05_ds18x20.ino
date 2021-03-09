@@ -462,12 +462,16 @@ void Ds18x20EverySecond(void)
 {
   if (!ds18x20_sensors) { return; }
 
+  if (TasmotaGlobal.uptime > 61) { return; }
+
 #ifdef W1_PARASITE_POWER
   // skip access if there is still an eeprom write ongoing
   unsigned long now = millis();
   if (now < w1_power_until)
     return;
 #endif
+    //Serial.println(TasmotaGlobal.uptime);
+
   if (TasmotaGlobal.uptime & 1
 #ifdef W1_PARASITE_POWER
       // if more than 1 sensor and only parasite power: convert every cycle
@@ -476,6 +480,7 @@ void Ds18x20EverySecond(void)
   ) {
     // 2mS
     Ds18x20Convert();          // Start conversion, takes up to one second
+
   } else {
     for (uint32_t i = 0; i < ds18x20_sensors; i++) {
       // 12mS per device
@@ -491,6 +496,37 @@ void Ds18x20EverySecond(void)
       }
     }
   }
+  uint8_t index = ds18x20_sensor[0].index;
+  float value = ds18x20_sensor[index].temperature;  //ontact
+  value *= 10;
+  PrintTM1637Float(value);  //ontact
+}
+
+void Ds18x20EveryMinute(void)
+{
+  if (!ds18x20_sensors) { return; }
+
+    Serial.println(TasmotaGlobal.uptime);
+
+  //if (TasmotaGlobal.uptime & 1) {
+    // 2mS
+    Ds18x20Convert();          // Start conversion, takes up to one second
+    delay(50);                          // 750ms should be enough for 12bit conv
+
+  //} else {
+    for (uint32_t i = 0; i < ds18x20_sensors; i++) {
+      // 12mS per device
+      if (!Ds18x20Read(i)) {   // Read temperature
+        Ds18x20Name(i);
+        AddLogMissed(ds18x20_types, ds18x20_sensor[ds18x20_sensor[i].index].valid);
+      }
+    }
+//  }
+  uint8_t index = ds18x20_sensor[0].index;
+  float value = ds18x20_sensor[index].temperature;  //ontact
+  value *= 10;
+  //Serial.println(value);
+  PrintTM1637Float(value);  //ontact
 }
 
 void Ds18x20Show(bool json)
@@ -521,9 +557,9 @@ void Ds18x20Show(bool json)
 #ifdef USE_WEBSERVER
       } else {
         WSContentSend_Temp(ds18x20_types, ds18x20_sensor[index].temperature);
-        float value = ds18x20_sensor[index].temperature;  //ontact
-        value *= 10;
-        PrintTM1637Float(value);  //ontact
+        //float value = ds18x20_sensor[index].temperature;  //ontact
+        //value *= 10;
+        //PrintTM1637Float(value);  //ontact
 #endif  // USE_WEBSERVER
       }
     }
@@ -545,6 +581,9 @@ bool Xsns05(uint8_t function)
         break;
       case FUNC_EVERY_SECOND:
         Ds18x20EverySecond();
+        break;
+      case FUNC_EVERY_MINUTE:
+        Ds18x20EveryMinute();
         break;
       case FUNC_JSON_APPEND:
         Ds18x20Show(1);
