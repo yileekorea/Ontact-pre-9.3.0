@@ -29,6 +29,8 @@
 #define TOUCH_HIT_THRESHOLD     3  // successful hits to filter out noise
 #endif  // ESP32
 
+#include <ArduinoJson.h>        // JSON decoding library
+
 const char kMultiPress[] PROGMEM =
   "|SINGLE|DOUBLE|TRIPLE|QUAD|PENTA|";
 
@@ -236,6 +238,7 @@ void ButtonHandler(void) {
           if (Settings.flag.button_single) {           // SetOption13 (0) - Allow only single button press for immediate action,
             if (!Settings.flag3.mqtt_buttons) {        // SetOption73 (0) - Decouple button from relay and send just mqtt topic
               AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_IMMEDIATE), button_index +1);
+
               if (!SendKey(KEY_BUTTON, button_index +1, POWER_TOGGLE)) {  // Execute Toggle command via MQTT if ButtonTopic is set
                 ExecuteCommandPower(button_index +1, POWER_TOGGLE, SRC_BUTTON);  // Execute Toggle command internally
               }
@@ -312,7 +315,10 @@ void ButtonHandler(void) {
               if (!RotaryButtonPressed(button_index)) {
 #endif
                 if (!Settings.flag3.mqtt_buttons && single_press && SendKey(KEY_BUTTON, button_index + Button.press_counter[button_index], POWER_TOGGLE)) {  // Execute Toggle command via MQTT if ButtonTopic is set
-                  // Success
+                  //Success
+                  //Serial.println("button pressed --- 1(single press)");
+                  GetLocalTemperature();
+
                 } else {
                   if (Button.press_counter[button_index] < 6) { // Single to Penta press
                     if (WifiState() > WIFI_RESTART) {           // Wifimanager active
@@ -342,6 +348,7 @@ void ButtonHandler(void) {
                           if ((Button.press_counter[button_index] > 1) && valid_relay && (Button.press_counter[button_index] <= MAX_RELAY_BUTTON1)) {
                             ExecuteCommandPower(button_index + Button.press_counter[button_index], POWER_TOGGLE, SRC_BUTTON);   // Execute Toggle command internally
 //                            AddLog(LOG_LEVEL_DEBUG, PSTR("DBG: Relay%d found on GPIO%d"), Button.press_counter[button_index], Pin(GPIO_REL1, Button.press_counter[button_index]-1));
+
                           }
                         }
                       }
@@ -359,6 +366,7 @@ void ButtonHandler(void) {
                   if (Settings.flag3.mqtt_buttons) {   // SetOption73 (0) - Decouple button from relay and send just mqtt topic
                     if (Button.press_counter[button_index] >= 1 && Button.press_counter[button_index] <= 5) {
                       MqttButtonTopic(button_index +1, Button.press_counter[button_index], 0);
+
                     }
                   }
                 }
@@ -376,6 +384,56 @@ void ButtonHandler(void) {
   }
 }
 
+void GetLocalTemperature(void) {
+String Location = "Gunpo,KR";
+//String zip_code = "15825,KR";
+String API_Key  = "1041444a18cfb8448343254a45721b1d";
+
+      HTTPClient http;  // declare an object of class HTTPClient
+
+      // specify request destination
+      http.begin("http://api.openweathermap.org/data/2.5/weather?q=" + Location + "&APPID=" + API_Key);  // !!
+      //http.begin("http://api.openweathermap.org/data/2.5/weather?zip=" + zip_code + "&APPID=" + API_Key);  // !!
+
+
+      int httpCode = http.GET();  // send the request
+
+      if (httpCode > 0)  // check the returning code
+      {
+        String payload = http.getString();   // get the request response payload
+
+        DynamicJsonBuffer jsonBuffer(512);
+
+        // Parse JSON object
+        JsonObject& root = jsonBuffer.parseObject(payload);
+        if (!root.success())
+        {
+          Serial.println(F("Parsing failed!"));
+          return;
+        }
+        Serial.println(F("Parsing success!"));
+
+        float temp = (float)(root["main"]["temp"]) - 273.15;        // get temperature in °C
+        int   humidity = root["main"]["humidity"];                  // get humidity in %
+        float pressure = (float)(root["main"]["pressure"]) / 1000;  // get pressure in bar
+        float wind_speed = root["wind"]["speed"];                   // get wind speed in m/s
+        int  wind_degree = root["wind"]["deg"];                     // get wind degree in °
+
+        Serial.print(F("Parsing Temperature: "));
+        Serial.println(temp);
+        Serial.print(F("Parsing Humidity   : "));
+        Serial.println(humidity);
+        Serial.print(F("Parsing Pressure   : "));
+        Serial.println((pressure));
+        Serial.print(F("Parsing Wind speed : "));
+        Serial.println((wind_speed));
+        Serial.print(F("Parsing wind_degree: "));
+        Serial.println((wind_degree));
+        Serial.println(F("=================================="));
+
+        PrintTM1637Float(temp*10);
+  }
+}
 /*
 void MqttButtonTopic(uint8_t button_id, uint8_t action, uint8_t hold) {
   char scommand[CMDSZ];
