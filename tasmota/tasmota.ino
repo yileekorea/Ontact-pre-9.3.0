@@ -101,8 +101,8 @@
 #include <WiFiManager.h>
 #include <RotaryEncoderArray.h>
 
-#define dfltROTARY_PIN1 5
-#define dfltROTARY_PIN2 4
+//#define dfltROTARY_PIN1 5
+//#define dfltROTARY_PIN2 4
 
 #define WM_NAME "OnTact"
 #define WM_PASSWORD "password"
@@ -343,8 +343,8 @@ void setupStart()
     //keep LED off
     digitalWrite(LED, HIGH);
   }
-  rotaryEncoderInit(1);
-  setRotaryEncoderPins(0, dfltROTARY_PIN1, dfltROTARY_PIN2, 0);
+  //rotaryEncoderInit(1);
+  //setRotaryEncoderPins(0, dfltROTARY_PIN1, dfltROTARY_PIN2, 0);
 
 }
 
@@ -603,7 +603,12 @@ void Scheduler(void) {
     XsnsCall(FUNC_EVERY_SECOND);
   }
 
-  static uint32_t state_minute = 0;                // State second timer
+  static uint32_t state_10seconds = 0;                // State 10seconds timer
+  if (TimeReached(state_10seconds)) {
+    SetNextTimeInterval(state_10seconds, (1000*10));
+    XsnsCall(FUNC_EVERY_10_SECONDS);
+  }
+  static uint32_t state_minute = 0;                // State minute timer
   if (TimeReached(state_minute)) {
     SetNextTimeInterval(state_minute, (1000*60));
     XsnsCall(FUNC_EVERY_MINUTE);

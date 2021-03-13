@@ -24,7 +24,8 @@
 
 #define XSNS_01             1
 
-#define USE_AC_ZERO_CROSS_DIMMER 1
+//#define USE_AC_ZERO_CROSS_DIMMER 1
+#undef USE_AC_ZERO_CROSS_DIMMER //ontact
 
 #define D_PRFX_COUNTER "Counter"
 #define D_CMND_COUNTERTYPE "Type"

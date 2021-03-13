@@ -261,7 +261,7 @@ void PrintTM1637Float(int16_t value)
 
   fnum = value;
   fnum /= 10;
-  Serial.println(fnum);
+  //Serial.println(fnum);
 
   TM1637ClearDisplay();
 

@@ -25,8 +25,8 @@
 *  The constructor takes two arguments, the number of the clock pin and the digital output pin:
 * SevenSegmentTM1637(byte pinCLK, byte pinDIO);
 */
-const byte PIN_CLK = 4;   // define CLK pin (any digital pin)
-const byte PIN_DIO = 5;   // define DIO pin (any digital pin)
+const byte PIN_CLK = 5;   // define CLK pin (any digital pin)
+const byte PIN_DIO = 4;   // define DIO pin (any digital pin)
 SevenSegmentTM1637    display(PIN_CLK, PIN_DIO);
 
 // define a fixed buffer size for receiving characters via Serial

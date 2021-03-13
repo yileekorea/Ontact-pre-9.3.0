@@ -351,9 +351,9 @@ void ButtonHandler(void) {
                     if (!Settings.flag.button_restrict) {  // SetOption1  - Control button multipress
                       snprintf_P(scmnd, sizeof(scmnd), PSTR(D_CMND_WIFICONFIG " 2"));
                       //Serial.println(scmnd);
-                      //Serial.println("D_CMND_WIFICONFIG");  //ontact
+                      //Serial.println("D_CMND_WIFICONFIG");    //ontact
                       ExecuteCommand(scmnd, SRC_BUTTON);
-
+                      //Settings.webserver = 2;
                     }
                   }
                   if (Settings.flag3.mqtt_buttons) {   // SetOption73 (0) - Decouple button from relay and send just mqtt topic

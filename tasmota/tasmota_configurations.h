@@ -266,7 +266,7 @@
 #undef USE_SONOFF_RF                             // Disable support for Sonoff Rf Bridge (+3k2 code)
   #undef USE_RF_FLASH                            // Disable support for flashing the EFM8BB1 chip on the Sonoff RF Bridge. C2CK must be connected to GPIO4, C2D to GPIO5 on the PCB
 #undef USE_SONOFF_SC                             // Disable support for Sonoff Sc (+1k1 code)
-//#undef USE_TUYA_MCU                              // Disable support for Tuya Serial MCU
+#undef USE_TUYA_MCU                              // Disable support for Tuya Serial MCU
 #undef USE_ARMTRONIX_DIMMERS                     // Disable support for Armtronix Dimmers (+1k4 code)
 #undef USE_PS_16_DZ                              // Disable support for PS-16-DZ Dimmer and Sonoff L1 (+2k code)
 #undef USE_SONOFF_IFAN                           // Disable support for Sonoff iFan02 and iFan03 (+2k code)
@@ -303,7 +303,7 @@
 
 #define USE_DISPLAY                              // Add Display Support (+2k code)
   #define USE_DISPLAY_TM1637                     // [DisplayModel 15] Enable TM1637 module
-
+/*
 #define USE_I2C                                  // I2C using library wire (+10k code, 0k2 mem, 124 iram)
   #define USE_DISPLAY_MODES1TO5                  // Enable display mode 1 to 5 in addition to mode 0
   #define USE_DISPLAY_LCD                        // [DisplayModel 1] Enable Lcd display (I2C addresses 0x27 and 0x3F) (+6k code)
@@ -321,6 +321,27 @@
   #define USE_DISPLAY_RA8876                     // [DisplayModel 10]
   #define USE_DISPLAY_ST7789                     // [DisplayModel 12] Enable ST7789 module
   #define USE_DISPLAY_SSD1331                    // [DisplayModel 14] Enable SSD1331 module
+*/
+//ontact 
+
+#undef USE_DISCOVERY                             // Disable mDNS for the following services (+8k code or +23.5k code with core 2_5_x, +0.3k mem)
+#undef USE_SUNRISE                               // Disable support for Sunrise and sunset tools
+
+
+#undef USE_LIGHT                                // Add Dimmer/Light support
+#undef USE_WS2812                               // WS2812 Led string using library NeoPixelBus (+5k code, +1k mem, 232 iram) - Disable by //
+#undef USE_WS2812_DMA                         // DMA supports only GPIO03 (= Serial RXD) (+1k mem). When USE_WS2812_DMA is enabled expect Exceptions on Pow
+#undef USE_MY92X1                               // Add support for MY92X1 RGBCW led controller as used in Sonoff B1, Ailight and Lohas
+#undef USE_SM16716                              // Add support for SM16716 RGB LED controller (+0k7 code)
+#undef USE_SM2135                               // Add support for SM2135 RGBCW led control as used in Action LSC (+0k6 code)
+#undef USE_SONOFF_L1                            // Add support for Sonoff L1 led control
+#undef USE_ELECTRIQ_MOODL                       // Add support for ElectriQ iQ-wifiMOODL RGBW LED controller
+#undef USE_LIGHT_PALETTE                        // Add support for color palette (+0k9 code)
+#undef USE_ADE7953
+#undef USE_IR_REMOTE                             // Disable IR driver
+#undef USE_IR_RECEIVE                             // Disable IR driver
+
+//ontact
 
 #undef DEBUG_THEO                                // Disable debug code
 #undef USE_DEBUG_DRIVER                          // Disable debug code

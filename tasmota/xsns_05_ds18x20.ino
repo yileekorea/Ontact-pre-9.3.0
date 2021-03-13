@@ -462,7 +462,7 @@ void Ds18x20EverySecond(void)
 {
   if (!ds18x20_sensors) { return; }
 
-  if (TasmotaGlobal.uptime > 61) { return; }
+  if (TasmotaGlobal.uptime > 61) { return; }  //ontact
 
 #ifdef W1_PARASITE_POWER
   // skip access if there is still an eeprom write ongoing
@@ -471,6 +471,8 @@ void Ds18x20EverySecond(void)
     return;
 #endif
     //Serial.println(TasmotaGlobal.uptime);
+    //Serial.print("TasmotaGlobal.temperature_celsius");
+    //Serial.println(TasmotaGlobal.temperature_celsius);
 
   if (TasmotaGlobal.uptime & 1
 #ifdef W1_PARASITE_POWER
@@ -502,16 +504,16 @@ void Ds18x20EverySecond(void)
   PrintTM1637Float(value);  //ontact
 }
 
-void Ds18x20EveryMinute(void)
+void Ds18x20Every10Seconds(void)
 {
   if (!ds18x20_sensors) { return; }
-
-    Serial.println(TasmotaGlobal.uptime);
 
   //if (TasmotaGlobal.uptime & 1) {
     // 2mS
     Ds18x20Convert();          // Start conversion, takes up to one second
-    delay(50);                          // 750ms should be enough for 12bit conv
+    //delay(750);              // 750ms should be enough for 12bit conv
+    Serial.println(TasmotaGlobal.uptime);
+    Serial.println(TasmotaGlobal.temperature_celsius);
 
   //} else {
     for (uint32_t i = 0; i < ds18x20_sensors; i++) {
@@ -582,8 +584,8 @@ bool Xsns05(uint8_t function)
       case FUNC_EVERY_SECOND:
         Ds18x20EverySecond();
         break;
-      case FUNC_EVERY_MINUTE:
-        Ds18x20EveryMinute();
+      case FUNC_EVERY_10_SECONDS:
+        Ds18x20Every10Seconds();
         break;
       case FUNC_JSON_APPEND:
         Ds18x20Show(1);

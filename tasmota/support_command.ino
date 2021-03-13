@@ -1658,7 +1658,7 @@ void CmndWifiConfig(void)
       XdrvMailbox.payload = WIFI_MANAGER;
     }
 
-    checkConfigMode();  //OnTact
+    checkConfigMode();  //ontact
     ESP_Restart();      //ontact
 
     Settings.sta_config = XdrvMailbox.payload;
