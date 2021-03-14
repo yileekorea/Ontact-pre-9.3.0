@@ -97,35 +97,29 @@
 /*********************************************************************************************\
  * WiFI Manager
 \*********************************************************************************************/
-#include <Ticker.h>
+//#include <Ticker.h>
 #include <WiFiManager.h>
-#include <RotaryEncoderArray.h>
-
-//#define dfltROTARY_PIN1 5
-//#define dfltROTARY_PIN2 4
 
 #define WM_NAME "OnTact"
 #define WM_PASSWORD "password"
 
 #ifdef WM_NAME
-	WiFiManager wifiManager;
+//	WiFiManager wifiManager;
 #endif
-//#define WIFI_CHECK_TIMEOUT 30000
-//unsigned long wifiCheckTime;
+
 char wmName[33];
 String macAddr;
 
-int buttonPulse[3];
-
-#define TRIGGER_PIN 0
 #define LED_NO_SSID 0.2
 #define LED_IN_CONFIG 0.8
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 13 // ESP32 DOES NOT DEFINE LED_BUILTIN
 #endif
-Ticker ticker;
-int LED = LED_BUILTIN;
+
+//Ticker ticker;
+//int LED = LED_BUILTIN;
+
 WiFiManager wm; // global wm instance
 
 /*********************************************************************************************\
@@ -241,122 +235,12 @@ struct {
 /*********************************************************************************************\
  * Main
 \*********************************************************************************************/
-void tick(){
-  //toggle state
-  digitalWrite(LED, !digitalRead(LED));     // set pin to the opposite state
-}
-//gets called when WiFiManager enters configuration mode
-void configModeCallback (WiFiManager *myWiFiManager) {
-  Serial.println("Entered config mode");
-  Serial.println(WiFi.softAPIP());
-  //if you used auto generated SSID, print it
-  Serial.println(myWiFiManager->getConfigPortalSSID());
-  //entered config mode, make led toggle faster
-  ticker.attach(LED_IN_CONFIG, tick);
-}
-
-void checkConfigMode(){
-  //buttonPulse[0] = getRotaryButtonPulse(0);
-  buttonPulse[0] = 2;
-
-  if(buttonPulse[0] == 2) {
-    buttonPulse[0] = 0;
-
-    Serial.println("Starting config portal-1");
-    wm.setConfigPortalTimeout(180);
-    ticker.attach(LED_IN_CONFIG, tick);
-
-    //      if (!wm.startConfigPortal("OnDemandAP","password")) {
-    if (!wm.startConfigPortal(wmName, WM_PASSWORD)) {
-      Serial.println("failed to connect or hit timeout");
-      delay(3000);
-      // ESP.restart();
-      if (WiFi.status() == WL_CONNECTED){
-        ticker.detach();
-        //keep LED off
-        digitalWrite(LED, HIGH);
-      }
-    }
-    else {
-      //if you get here you have connected to the WiFi
-      Serial.println("connected...yeey :)");
-      ticker.detach();
-      //keep LED off
-      digitalWrite(LED, HIGH);
-    }
-  }
-}
-
-void setupStart()
-{
-  WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
-  //set led pin as output
-  pinMode(LED, OUTPUT);
-  // start ticker with 0.5 because we start in AP mode and try to connect
-  ticker.attach(LED_IN_CONFIG, tick);
-
-  //Serial.setDebugOutput(false);
-  delay(3000);
-  Serial.println("\n Starting");
-
-  pinMode(TRIGGER_PIN, INPUT);
-
-  macAddr = WiFi.macAddress();
-  macAddr.replace(":","");
-  Serial.println(macAddr);
-
-  // wm.resetSettings(); // wipe settings
-
-  //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
-  wm.setAPCallback(configModeCallback);
-/*
-  // add a custom input field
-  int customFieldLength = 40;
-  // test custom html(radio)
-  const char* custom_radio_str = "<br/><label for='customfieldid'>Custom Field Label</label><input type='radio' name='customfieldid' value='1' checked> One<br><input type='radio' name='customfieldid' value='2'> Two<br><input type='radio' name='customfieldid' value='3'> Three";
-  new (&custom_field) WiFiManagerParameter(custom_radio_str); // custom html input
-
-  wm.addParameter(&custom_field);
-  wm.setSaveParamsCallback(saveParamCallback);
-*/
-  std::vector<const char *> menu = {"wifi","info","sep","exit","restart"};
-  //std::vector<const char *> menu = {"wifi","wifinoscan","info","param","close","sep","erase","update","restart","exit"};
-  wm.setMenu(menu);
-
-  // set dark theme
-  wm.setClass("invert");
-  wm.setConfigPortalTimeout(180); // auto close configportal after n seconds
-  strcpy(wmName, WM_NAME);
-	strcat(wmName, macAddr.c_str());
-  bool res;
-  res = wm.autoConnect(wmName, WM_PASSWORD);
-
-  if(!res) {
-    Serial.println("Failed to connect or hit timeout");
-    ticker.attach(LED_NO_SSID, tick);
-    // ESP.restart();
-  }
-  else {
-    //if you get here you have connected to the WiFi
-    Serial.println("connected...yeey :)");
-    ticker.detach();
-    //keep LED off
-    digitalWrite(LED, HIGH);
-  }
-  //rotaryEncoderInit(1);
-  //setRotaryEncoderPins(0, dfltROTARY_PIN1, dfltROTARY_PIN2, 0);
-
-}
-
 void setup(void) {
 #ifdef ESP32
 #ifdef DISABLE_ESP32_BROWNOUT
   DisableBrownout();      // Workaround possible weak LDO resulting in brownout detection during Wifi connection
 #endif
 #endif
-
-  setupStart();
-
   RtcPreInit();
   SettingsInit();
 
@@ -479,7 +363,8 @@ void setup(void) {
 
   GpioInit();
 
-  WifiConnect();
+//  UserWiFiSetupStart();
+//  WifiConnect();
 
   SetPowerOnState();
 
@@ -497,6 +382,10 @@ void setup(void) {
 
   XdrvCall(FUNC_INIT);
   XsnsCall(FUNC_INIT);
+
+  UserWiFiSetupStart();
+  WifiConnect();
+
 #ifdef USE_SCRIPT
   if (bitRead(Settings.rule_enabled, 0)) Run_Scripter(">BS",3,0);
 #endif

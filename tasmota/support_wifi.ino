@@ -57,6 +57,106 @@ struct WIFI {
   int8_t best_network_db;
 } Wifi;
 
+//gets called when WiFiManager enters configuration mode
+void configModeCallback (WiFiManager *myWiFiManager) {
+  Serial.println("Entered config mode");
+  Serial.println(WiFi.softAPIP());
+  //if you used auto generated SSID, print it
+  Serial.println(myWiFiManager->getConfigPortalSSID());
+  //entered config mode, make led toggle faster
+  //ticker.attach(LED_IN_CONFIG, tick);
+}
+
+void checkConfigMode(){
+    Serial.println("Starting config portal-1");
+    std::vector<const char *> menu = {"wifi","info","sep","restart"};
+    //std::vector<const char *> menu = {"wifi","info","sep","exit","restart"};
+    //std::vector<const char *> menu = {"wifi","wifinoscan","info","param","close","sep","erase","update","restart","exit"};
+    wm.setMenu(menu);
+
+    // set dark theme
+    wm.setClass("invert");
+    wm.setConfigPortalTimeout(180);
+
+    //TM1637Init();              // init
+    SSiDTM1637Blink();
+
+    //if (!wm.startConfigPortal("OnDemandAP","password")) {
+    if (!wm.startConfigPortal(wmName, WM_PASSWORD)) {
+      Serial.println("failed to connect or hit timeout");
+      delay(3000);
+      // ESP.restart();
+      if (WiFi.status() == WL_CONNECTED){
+        ConnectedTM1637Blink();
+
+      }
+    }
+    else {
+      //if you get here you have connected to the WiFi
+      Serial.println("connected...yeey :)");
+      ConnectedTM1637Blink();
+      delay(3000);
+
+    }
+}
+
+void UserWiFiSetupStart()
+{
+  WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
+  //set led pin as output
+  //pinMode(LED, OUTPUT);
+  // start ticker with 0.5 because we start in AP mode and try to connect
+  //ticker.attach(LED_IN_CONFIG, tick);
+  //TM1637Init();              // init
+  SSiDTM1637Blink();
+
+  delay(3000);
+  Serial.println("\n Starting");
+  
+  macAddr = WiFi.macAddress();
+  macAddr.replace(":","");
+  Serial.println(macAddr);
+
+  //wm.resetSettings(); // wipe settings
+
+  //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
+  wm.setAPCallback(configModeCallback);
+
+  // add a custom input field
+  //int customFieldLength = 40;
+  // test custom html(radio)
+  //const char* custom_radio_str = "<br/><label for='customfieldid'>Custom Field Label</label><input type='radio' name='customfieldid' value='1' checked> One<br><input type='radio' name='customfieldid' value='2'> Two<br><input type='radio' name='customfieldid' value='3'> Three";
+  //new (&custom_field) WiFiManagerParameter(custom_radio_str); // custom html input
+
+  //wm.addParameter(&custom_field);
+  //wm.setSaveParamsCallback(saveParamCallback);
+
+  std::vector<const char *> menu = {"wifi","info","sep","restart"};
+  //std::vector<const char *> menu = {"wifi","info","sep","exit","restart"};
+  //std::vector<const char *> menu = {"wifi","wifinoscan","info","param","close","sep","erase","update","restart","exit"};
+  wm.setMenu(menu);
+
+  // set dark theme
+  wm.setClass("invert");
+  wm.setConfigPortalTimeout(180); // auto close configportal after n seconds
+  strcpy(wmName, WM_NAME);
+	strcat(wmName, macAddr.c_str());
+
+  bool res;
+  res = wm.autoConnect(wmName, WM_PASSWORD);
+
+  if(!res) {
+    Serial.println("Failed to connect or hit timeout");
+    //ESP.restart();
+  }
+  else {
+    //if you get here you have connected to the WiFi
+    Serial.println("connected...yeey :)");
+    ConnectedTM1637Blink();
+
+  }
+}
+
 int WifiGetRssiAsQuality(int rssi)
 {
   int quality = 0;
@@ -103,10 +203,14 @@ void WifiConfig(uint8_t type)
     }
     else if (WIFI_SERIAL == Wifi.config_type) {
       AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_WIFI D_WCFG_6_SERIAL " " D_ACTIVE_FOR_3_MINUTES));
+
     }
 #ifdef USE_WEBSERVER
     else if (WIFI_MANAGER == Wifi.config_type || WIFI_MANAGER_RESET_ONLY == Wifi.config_type) {
       AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_WIFI D_WCFG_2_WIFIMANAGER " " D_ACTIVE_FOR_3_MINUTES));
+      //checkConfigMode();  //ontact
+      //ESP_Restart();      //ontact
+
       WifiManagerBegin(WIFI_MANAGER_RESET_ONLY == Wifi.config_type);
     }
 #endif  // USE_WEBSERVER

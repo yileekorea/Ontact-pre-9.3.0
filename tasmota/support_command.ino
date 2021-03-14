@@ -1657,10 +1657,12 @@ void CmndWifiConfig(void)
     if ((EX_WIFI_SMARTCONFIG == XdrvMailbox.payload) || (EX_WIFI_WPSCONFIG == XdrvMailbox.payload)) {
       XdrvMailbox.payload = WIFI_MANAGER;
     }
-
-    checkConfigMode();  //ontact
-    ESP_Restart();      //ontact
-
+    
+    if(Settings.webserver == 0){
+      checkConfigMode();  //ontact
+      ESP_Restart();      //ontact
+    }
+    
     Settings.sta_config = XdrvMailbox.payload;
     TasmotaGlobal.wifi_state_flag = Settings.sta_config;
     if (WifiState() > WIFI_RESTART) {
