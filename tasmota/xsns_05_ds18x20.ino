@@ -506,7 +506,7 @@ void Ds18x20EverySecond(void)
 
 void Ds18x20Every10Seconds(void)
 {
-  Serial.println("Ds18x20Every10Seconds");
+  //Serial.println("Ds18x20Every10Seconds");
   if (!ds18x20_sensors) { return; }
   if ((TasmotaGlobal.uptime < 61)) { return; }  //ontact
 

@@ -139,8 +139,10 @@ void UserWiFiSetupStart()
   // set dark theme
   wm.setClass("invert");
   wm.setConfigPortalTimeout(180); // auto close configportal after n seconds
-  strcpy(wmName, WM_NAME);
-	strcat(wmName, macAddr.c_str());
+
+  //strcpy(wmName, WM_NAME);
+	//strcat(wmName, macAddr.c_str());
+  strcpy(wmName, TasmotaGlobal.hostname);
 
   bool res;
   res = wm.autoConnect(wmName, WM_PASSWORD);
