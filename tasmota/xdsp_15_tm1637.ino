@@ -168,10 +168,10 @@ void TM1637Init(void) {
 //if (PinUsed(GPIO_TM1637CLK) && PinUsed(GPIO_TM1637DIO)) {
     //tm1637display = new SevenSegmentTM1637(Pin(GPIO_TM1637CLK), Pin(GPIO_TM1637DIO));
 //Serial.println("TM1637Init");
-//if (PinUsed(GPIO_SSPI_SCLK) && PinUsed(GPIO_SSPI_MOSI)) {
-if (1) {
-    //tm1637display = new SevenSegmentTM1637(Pin(GPIO_SSPI_SCLK), Pin(GPIO_SSPI_MOSI) );
-    tm1637display = new SevenSegmentTM1637(5, 4); //ontact
+if (PinUsed(GPIO_SSPI_SCLK) && PinUsed(GPIO_SSPI_MOSI)) {
+//if (1) {
+    tm1637display = new SevenSegmentTM1637(Pin(GPIO_SSPI_SCLK), Pin(GPIO_SSPI_MOSI) );
+    //tm1637display = new SevenSegmentTM1637(5, 16); //ontact
     if (tm1637display) {
       Settings.display_model = XDSP_15;
 
@@ -266,7 +266,7 @@ void ConnectedTM1637Blink()
 {
   tm1637display->setBacklight(100);  // set the brightness to 100 %
   tm1637display->print("Con");      // display INIT on the display
-  tm1637display->blink();
+  //tm1637display->blink();
 }
 
 void NO_SSIDTM1637Blink()

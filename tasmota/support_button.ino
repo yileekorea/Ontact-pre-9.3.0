@@ -316,7 +316,7 @@ void ButtonHandler(void) {
 #endif
                 if (!Settings.flag3.mqtt_buttons && single_press && SendKey(KEY_BUTTON, button_index + Button.press_counter[button_index], POWER_TOGGLE)) {  // Execute Toggle command via MQTT if ButtonTopic is set
                   //Success
-                  //Serial.println("button pressed --- 1(single press)");
+                  Serial.println("button pressed --- 1(single press)");
                   GetLocalTemperature();
 
                 } else {
@@ -358,7 +358,7 @@ void ButtonHandler(void) {
                     if (!Settings.flag.button_restrict) {  // SetOption1  - Control button multipress
                       snprintf_P(scmnd, sizeof(scmnd), PSTR(D_CMND_WIFICONFIG " 2"));
                       //Serial.println(scmnd);
-                      //Serial.println("D_CMND_WIFICONFIG");    //ontact
+                      Serial.println("D_CMND_WIFICONFIG");    //ontact
                       ExecuteCommand(scmnd, SRC_BUTTON);
                       //Settings.webserver = 2;
                     }

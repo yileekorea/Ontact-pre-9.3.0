@@ -223,6 +223,26 @@ struct {
   char log_buffer[LOG_BUFFER_SIZE];         // Web log buffer
 } TasmotaGlobal;
 
+struct RULES {
+  String event_value;
+  unsigned long timer[MAX_RULE_TIMERS] = { 0 };
+  uint32_t triggers[MAX_RULE_SETS] = { 0 };
+  uint8_t trigger_count[MAX_RULE_SETS] = { 0 };
+
+  long new_power = -1;
+  long old_power = -1;
+  long old_dimm = -1;
+
+  uint16_t last_minute = 60;
+  uint16_t vars_event = 0;   // Bitmask supporting MAX_RULE_VARS bits
+  uint16_t mems_event = 0;   // Bitmask supporting MAX_RULE_MEMS bits
+  bool teleperiod = false;
+  bool busy = false;
+  bool no_execute = false;   // Don't actually execute rule commands
+
+  char event_data[100];
+} Rules;
+
 #ifdef SUPPORT_IF_STATEMENT
   #include <LinkedList.h>
   LinkedList<String> backlog;               // Command backlog implemented with LinkedList
@@ -363,7 +383,7 @@ void setup(void) {
   GpioInit();
 
 //  UserWiFiSetupStart();
-//  WifiConnect();
+//  WifiConnect();  //original location
 
   SetPowerOnState();
 
@@ -382,8 +402,8 @@ void setup(void) {
   XdrvCall(FUNC_INIT);
   XsnsCall(FUNC_INIT);
 
-  UserWiFiSetupStart();
-  WifiConnect();
+  //UserWiFiSetupStart();
+  WifiConnect();  //ontact moved
 
 #ifdef USE_SCRIPT
   if (bitRead(Settings.rule_enabled, 0)) Run_Scripter(">BS",3,0);

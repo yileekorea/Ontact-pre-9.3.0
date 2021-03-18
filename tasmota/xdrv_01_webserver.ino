@@ -517,7 +517,7 @@ void WifiManagerBegin(bool reset_only)
     AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_WIFI D_WIFIMANAGER_SET_ACCESSPOINT));
   }
 
-  StopWebserver();
+  StopWebserver(); 
 
   DnsServer = new DNSServer();
 

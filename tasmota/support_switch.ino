@@ -403,7 +403,20 @@ void SwitchHandler(uint32_t mode) {
           break;
         }
         Switch.last_state[i] = button;
+        //ontact
+        Serial.print("switch Mode: ");
+        Serial.println(switchmode);
+        Serial.print("button: ");
+        Serial.println(button);
       }
+      /*
+      if(button == Switch.last_state[i]){
+        if (!button){
+          //ExecuteCommand("RuleTimer1 20", SRC_SWITCH);
+          Rules.timer[0] = 30;  //timer_set;
+        }
+      }
+      */
       if (switchflag <= POWER_TOGGLE) {
         if (!Settings.flag5.mqtt_switches) {                    // SetOption114 (0) - Detach Switches from relays and enable MQTT action state for all the SwitchModes
           if (!SendKey(KEY_SWITCH, i +1, switchflag)) {         // Execute command via MQTT

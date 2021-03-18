@@ -350,6 +350,7 @@ void UpdateLedPowerAll()
 	}
 }
 
+//ontact LED1
 void SetLedPowerIdx(uint32_t led, uint32_t state)
 {
   if (!PinUsed(GPIO_LEDLNK) && (0 == led)) {  // Legacy - LED1 is link led only if LED2 is present

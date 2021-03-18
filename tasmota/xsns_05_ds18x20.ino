@@ -462,7 +462,7 @@ void Ds18x20EverySecond(void)
 {
   if (!ds18x20_sensors) { return; }
 
-  if ((TasmotaGlobal.uptime < 5)&&(TasmotaGlobal.uptime > 61)) { return; }  //ontact
+  if ((TasmotaGlobal.uptime > 61)) { return; }  //ontact
 
 #ifdef W1_PARASITE_POWER
   // skip access if there is still an eeprom write ongoing
@@ -470,9 +470,9 @@ void Ds18x20EverySecond(void)
   if (now < w1_power_until)
     return;
 #endif
-    //Serial.println(TasmotaGlobal.uptime);
-    //Serial.print("TasmotaGlobal.temperature_celsius");
-    //Serial.println(TasmotaGlobal.temperature_celsius);
+    Serial.println(TasmotaGlobal.uptime);
+    Serial.print("EverySecond.celsius: ");
+    Serial.println(TasmotaGlobal.temperature_celsius);
 
   if (TasmotaGlobal.uptime & 1
 #ifdef W1_PARASITE_POWER

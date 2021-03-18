@@ -160,7 +160,7 @@ void (* const RulesCommand[])(void) PROGMEM = {
   } MQTT_Subscription;
   LinkedList<MQTT_Subscription> subscriptions;
 #endif  // SUPPORT_MQTT_EVENT
-
+/*
 struct RULES {
   String event_value;
   unsigned long timer[MAX_RULE_TIMERS] = { 0 };
@@ -180,7 +180,7 @@ struct RULES {
 
   char event_data[100];
 } Rules;
-
+*/
 char rules_vars[MAX_RULE_VARS][33] = {{ 0 }};
 
 #if (MAX_RULE_VARS>16)
@@ -2158,6 +2158,7 @@ void CmndRule(void)
   }
 }
 
+
 void CmndRuleTimer(void)
 {
   if (XdrvMailbox.index > MAX_RULE_TIMERS) { return; }
@@ -2168,6 +2169,7 @@ void CmndRuleTimer(void)
     i = 1;
     max_i = MAX_RULE_TIMERS;
   }
+
 #ifdef USE_EXPRESSION
   float timer_set = evaluateExpression(XdrvMailbox.data, XdrvMailbox.data_len);
   timer_set = (timer_set > 0) ? millis() + (1000 * timer_set) : 0;
@@ -2179,11 +2181,13 @@ void CmndRuleTimer(void)
       Rules.timer[i -1] = timer_set;
     }
   }
+
   ResponseClear();
   for (i = 0; i < MAX_RULE_TIMERS; i++) {
     ResponseAppend_P(PSTR("%c\"T%d\":%d"), (i) ? ',' : '{', i +1, (Rules.timer[i]) ? (Rules.timer[i] - millis()) / 1000 : 0);
   }
   ResponseJsonEnd();
+
 }
 
 void CmndEvent(void)
