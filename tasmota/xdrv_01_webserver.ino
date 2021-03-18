@@ -752,7 +752,9 @@ void WSContentSendStyle_P(const char* formatP, ...)
   WebColor(COL_TEXT_WARNING),
 #endif
   WebColor(COL_TITLE),
-  ModuleName().c_str(), SettingsText(SET_DEVICENAME));
+  //ModuleName().c_str(), SettingsText(SET_DEVICENAME));
+  SettingsText(SET_DEVICENAME), ModuleName().c_str());
+
   if (Settings.flag3.gui_hostname_ip) {                // SetOption53 - Show hostanme and IP address in GUI main menu
     bool lip = (static_cast<uint32_t>(WiFi.localIP()) != 0);
     bool sip = (static_cast<uint32_t>(WiFi.softAPIP()) != 0);

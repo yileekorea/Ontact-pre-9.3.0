@@ -1009,9 +1009,13 @@ void RulesEverySecond(void)
     if (Rules.timer[i] != 0L) {           // Timer active?
       if (TimeReached(Rules.timer[i])) {  // Timer finished?
         Rules.timer[i] = 0L;              // Turn off this timer
+        if(i == 0) {ExecuteCommand("DisplayBrightness 0", SRC_SWITCH);}  //goodle          
+
         if (Settings.rule_enabled && !Rules.busy) {  // Any rule enabled
           snprintf_P(json_event, sizeof(json_event), PSTR("{\"Rules\":{\"Timer\":%d}}"), i +1);
+          //Serial.println("RulesProcessEvent-1");  //goodle
           RulesProcessEvent(json_event);
+          //Serial.println("RulesProcessEvent-2");  //goodle
         }
       }
     }
