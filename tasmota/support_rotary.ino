@@ -253,6 +253,12 @@ void RotaryHandler(void) {
         Encoder[index].abs_position[button_pressed] = Settings.param[P_ROTARY_MAX_STEP];      // SetOption43 - Rotary steps
       }
       Response_P(PSTR("{\"Rotary%d\":{\"Pos1\":%d,\"Pos2\":%d}}"), index +1, Encoder[index].abs_position[0], Encoder[index].abs_position[1]);
+      //Serial.println("Encoder[index].abs_position[0]");
+      //Serial.println(Encoder[index].abs_position[0]);
+      //Serial.println(Encoder[index].abs_position[1]);
+      //ExecuteCommand("Backlog TempTargetSet; DisplayBrightness 5", SRC_THERMOSTAT);  //goodle
+      //ExecuteCommand("Backlog mem16 %value%; RuleTimer1 30", SRC_THERMOSTAT);  //goodle
+
       XdrvRulesProcess();
 #ifdef USE_LIGHT
     }

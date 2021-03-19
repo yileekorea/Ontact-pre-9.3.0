@@ -462,7 +462,7 @@ void Ds18x20EverySecond(void)
 {
   if (!ds18x20_sensors) { return; }
 
-  if ((TasmotaGlobal.uptime > 61)) { return; }  //ontact
+  if ((TasmotaGlobal.uptime > 21)) { return; }  //ontact
 
 #ifdef W1_PARASITE_POWER
   // skip access if there is still an eeprom write ongoing

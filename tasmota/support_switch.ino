@@ -292,13 +292,13 @@ void SwitchHandler(uint32_t mode) {
           break;
         case FOLLOW:
           switchflag = button &1;            // Follow wall switch state
-          ExecuteCommand("RuleTimer1 30", SRC_SWITCH);  //goodle
-          ExecuteCommand("DisplayBrightness 5", SRC_SWITCH);  //goodle          
+          ExecuteCommand("Backlog RuleTimer1 30; DisplayBrightness 5", SRC_SWITCH);  //goodle
+          //ExecuteCommand("DisplayBrightness 5", SRC_SWITCH);  //goodle          
           break;
         case FOLLOW_INV:
           switchflag = ~button &1;           // Follow inverted wall switch state
-          ExecuteCommand("RuleTimer1 30", SRC_SWITCH);  //goodle
-          ExecuteCommand("DisplayBrightness 5", SRC_SWITCH);  //goodle
+          ExecuteCommand("Backlog RuleTimer1 30; DisplayBrightness 5", SRC_SWITCH);  //goodle
+          //ExecuteCommand("DisplayBrightness 5", SRC_SWITCH);  //goodle
           break;
         case PUSHBUTTON:
           if (PRESSED == button) {
@@ -414,11 +414,13 @@ void SwitchHandler(uint32_t mode) {
         Serial.println(button);
 
       }
-      
-      if(button == Switch.last_state[i]){
-         if ((button) && (TimePassedSince(Rules.timer[0]) > 200 )) {  // Timer finished? goodle
+      //goodle
+      if(button == Switch.last_state[i]){        
+         if ((button) && (TimePassedSince(Rules.timer[0]) > 100 )) {  // Timer finished? goodle
           ExecuteCommand("RuleTimer1 30", SRC_SWITCH);
+          //Put2RuleTimer(1, 30);
         }
+        
       }
       
       if (switchflag <= POWER_TOGGLE) {

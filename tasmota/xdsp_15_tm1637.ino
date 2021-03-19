@@ -645,6 +645,17 @@ bool CmndTM1637Text(bool clear) {
 * Sets brightness of the display.
 * Command:  DisplayBrightness {0-8}    // 0 => off
 \*********************************************************************************************/
+bool Put2TM1637Brightness(uint16_t brightness) {
+
+  TM1637Data.brightness = brightness;
+
+  tm1637display->setBacklight(TM1637Data.brightness*10);
+  
+  Put2RuleTimer(1, 30);
+  //ExecuteCommand("Backlog RuleTimer1 30", SRC_THERMOSTAT);  //goodle
+  return true;
+}
+
 bool CmndTM1637Brightness(void) {
 
   uint16_t val = XdrvMailbox.payload;

@@ -2162,6 +2162,13 @@ void CmndRule(void)
   }
 }
 
+void Put2RuleTimer(uint16_t timer_no, uint16_t timer_val)
+{
+  if (timer_no > MAX_RULE_TIMERS) { return; }
+
+  uint32_t timer_set = (timer_val > 0) ? millis() + (1000 * timer_val) : 0;
+  Rules.timer[timer_no -1] = timer_set;
+}
 
 void CmndRuleTimer(void)
 {
@@ -2177,6 +2184,7 @@ void CmndRuleTimer(void)
 #ifdef USE_EXPRESSION
   float timer_set = evaluateExpression(XdrvMailbox.data, XdrvMailbox.data_len);
   timer_set = (timer_set > 0) ? millis() + (1000 * timer_set) : 0;
+  Serial.println("USE_EXPRESSION")
 #else
   uint32_t timer_set = (XdrvMailbox.payload > 0) ? millis() + (1000 * XdrvMailbox.payload) : 0;
 #endif  // USE_EXPRESSION
@@ -2230,6 +2238,14 @@ void CmndVariable(void)
       ResponseCmndIdxChar(rules_vars[XdrvMailbox.index -1]);
     }
   }
+}
+
+void Put2Memory(uint32_t index, float for_replace)
+{
+    char tempchar[8];
+
+    dtostrfd(for_replace,1,tempchar); //소수점 1자리
+    SettingsUpdateText(SET_MEM1 + index -1, tempchar);
 }
 
 void CmndMemory(void)

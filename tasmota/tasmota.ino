@@ -97,7 +97,7 @@
 /*********************************************************************************************\
  * WiFI Manager
 \*********************************************************************************************/
-#include <WiFiManager.h>
+//#include <WiFiManager.h>
 
 #define WM_NAME "OnTact"
 #define WM_PASSWORD "password"
@@ -119,7 +119,7 @@ String macAddr;
 //Ticker ticker;
 //int LED = LED_BUILTIN;
 
-WiFiManager wm; // global wm instance
+//WiFiManager wm; // global wm instance
 
 /*********************************************************************************************\
  * Global variables

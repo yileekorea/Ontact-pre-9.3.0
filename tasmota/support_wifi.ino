@@ -58,6 +58,7 @@ struct WIFI {
 } Wifi;
 
 //gets called when WiFiManager enters configuration mode
+/*
 void configModeCallback (WiFiManager *myWiFiManager) {
   Serial.println("Entered config mode");
   Serial.println(WiFi.softAPIP());
@@ -158,7 +159,7 @@ void UserWiFiSetupStart()
 
   }
 }
-
+*/
 int WifiGetRssiAsQuality(int rssi)
 {
   int quality = 0;

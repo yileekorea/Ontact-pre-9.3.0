@@ -1597,12 +1597,19 @@ void PutTempTargetSet(float temp)
   value = Thermostat[0].temp_target_level;
   PrintTM1637Float(value);  //ontact
 
+  //SettingsUpdateText(SET_MEM1 + 15, value);
+  Put2Memory(16, value/10); //Rules
+
   //Serial.print("PutTempTargetSet");
   //Serial.println(value);
   //ResponseCmndFloat((float)value / 10, 1);
   //ResponseSetTempFloat((float)value / 10, 1);
   //Response_P(PSTR("{\"%s\":%*_f}"), "TempTargetSet", 1, &value);
   //ResponseCmndFloat((float)value / 10, 1);
+
+  //ExecuteCommand("Backlog TempTargetSet; DisplayBrightness 5", SRC_THERMOSTAT);  //goodle
+  Put2TM1637Brightness(5);  //DisplayBrightness 5
+  //Put2RuleTimer(1, 30);
 }
 
 void CmndTempTargetSet(void)
