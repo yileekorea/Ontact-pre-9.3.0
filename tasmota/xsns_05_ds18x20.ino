@@ -508,7 +508,7 @@ void Ds18x20Every10Seconds(void)
 {
   //Serial.println("Ds18x20Every10Seconds");
   if (!ds18x20_sensors) { return; }
-  if ((TasmotaGlobal.uptime < 61)) { return; }  //ontact
+  if ((TasmotaGlobal.uptime < 20)) { return; }  //ontact
 
   //if (TasmotaGlobal.uptime & 1) {
     // 2mS
@@ -586,8 +586,11 @@ bool Xsns05(uint8_t function)
       case FUNC_EVERY_SECOND:
         Ds18x20EverySecond();
         break;
-      case FUNC_EVERY_10_SECONDS:
+      case FUNC_EVERY_5_SECONDS:
         Ds18x20Every10Seconds();
+        break;
+      case FUNC_EVERY_10_SECONDS:
+        //Ds18x20Every10Seconds();
         break;
       case FUNC_JSON_APPEND:
         Ds18x20Show(1);

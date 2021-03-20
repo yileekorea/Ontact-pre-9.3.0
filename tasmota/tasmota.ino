@@ -511,7 +511,12 @@ void Scheduler(void) {
     XsnsCall(FUNC_EVERY_SECOND);
   }
 
-  static uint32_t state_10seconds = 0;                // State 10seconds timer
+  static uint32_t state_5seconds = 0;                // State 10seconds timer
+  if (TimeReached(state_5seconds)) {
+    SetNextTimeInterval(state_5seconds, (1000*5));
+    XsnsCall(FUNC_EVERY_5_SECONDS);
+  }
+    static uint32_t state_10seconds = 0;                // State 10seconds timer
   if (TimeReached(state_10seconds)) {
     SetNextTimeInterval(state_10seconds, (1000*10));
     XsnsCall(FUNC_EVERY_10_SECONDS);

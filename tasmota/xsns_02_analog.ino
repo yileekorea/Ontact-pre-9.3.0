@@ -291,6 +291,13 @@ void AdcEvery250ms(void) {
         Adc[idx].last_value = new_value;
         uint16_t value = Adc[idx].last_value / ANALOG_PERCENT;
         Response_P(PSTR("{\"ANALOG\":{\"A%ddiv10\":%d}}"), idx + offset, (value > 99) ? 100 : value);
+
+        if((430 > new_value)||(470 < new_value)) {  //w/o ANALOG_PERCENT(10) 
+            Put2TM1637Brightness(5);
+            Serial.print("ADC_INPUT : ");
+            Serial.println(new_value);
+        }
+
         XdrvRulesProcess();
       }
     }
@@ -447,7 +454,14 @@ void AdcShow(bool json) {
     switch (Adc[idx].type) {
       case ADC_INPUT: {
         uint16_t analog = AdcRead(Adc[idx].pin, 5);
-
+//goodle
+/*
+        if((440 > analog)||(470 < analog)) {
+            Put2TM1637Brightness(5);
+            Serial.print("ADC_SHOW_INPUT : ");
+            Serial.println(analog);
+        }
+*/
         if (json) {
           AdcShowContinuation(&jsonflg);
           ResponseAppend_P(PSTR("\"A%d\":%d"), idx + offset, analog);
@@ -683,11 +697,12 @@ bool Xsns02(uint8_t function) {
         switch (function) {
 #ifdef USE_RULES
           case FUNC_EVERY_250_MSECOND:
-            AdcEvery250ms();
+            //AdcEvery250ms();
             break;
 #endif  // USE_RULES
           case FUNC_EVERY_SECOND:
-            AdcEverySecond();
+            //AdcEverySecond(); //goodle replaced to 250ms task
+            AdcEvery250ms();
             break;
           case FUNC_JSON_APPEND:
             AdcShow(1);

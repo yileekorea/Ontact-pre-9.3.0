@@ -92,7 +92,9 @@
 
 // -- Ota -----------------------------------------
 #ifdef ESP8266
-#define OTA_URL                "http://ota.tasmota.com/tasmota/release/tasmota.bin.gz"  // [OtaUrl]
+//#define OTA_URL                "http://ota.tasmota.com/tasmota/release/tasmota.bin.gz"  // [OtaUrl]
+#define OTA_URL                "http://thinkway.ipecsacademia.site:9000/regi_www/goodle.bin"  // [OtaUrl]
+
 #endif  // ESP8266
 #ifdef ESP32
 #define OTA_URL                "http://ota.tasmota.com/tasmota32/release/tasmota32.bin"  // [OtaUrl]
@@ -279,7 +281,8 @@
 #define APP_TIMEZONE           9                 // [Timezone] +1 hour (Amsterdam) (-13 .. 14 = hours from UTC, 99 = use TIME_DST/TIME_STD)
 #define APP_LEDSTATE           LED_POWER         // [LedState] Function of led
                                                  //   (LED_OFF, LED_POWER, LED_MQTTSUB, LED_POWER_MQTTSUB, LED_MQTTPUB, LED_POWER_MQTTPUB, LED_MQTT, LED_POWER_MQTT)
-#define APP_LEDMASK            0xFFFF            // [LedMask] Assign Relay to Power led (0xFFFF is default)
+//#define APP_LEDMASK            0xFFFF            // [LedMask] Assign Relay to Power led (0xFFFF is default)
+#define APP_LEDMASK            0x0001            // [LedMask] Assign Relay to Power led (0xFFFF is default)
 #define APP_ENABLE_LEDLINK     false             // [SetOption31] Enable link led blinking
 
 #define APP_PULSETIME          0                 // [PulseTime] Time in 0.1 Sec to turn off power for relay 1 (0 = disabled)
@@ -853,7 +856,8 @@
   #define THERMOSTAT_TIME_MIN_ACTION            1         // Default minimum thermostat time per cycle in minutes
 //  #define THERMOSTAT_TIME_MIN_ACTION            4         // Default minimum thermostat time per cycle in minutes
   #define THERMOSTAT_TIME_MIN_TURNOFF_ACTION    3         // Default minimum turnoff time in minutes, below it the thermostat will be held on
-  #define THERMOSTAT_PROP_BAND                  4         // Default proportional band of the PI controller in degrees celsius
+//  #define THERMOSTAT_PROP_BAND                  4         // Default proportional band of the PI controller in degrees celsius
+  #define THERMOSTAT_PROP_BAND                  2         // Default proportional band of the PI controller in degrees celsius
   #define THERMOSTAT_TEMP_RESET_ANTI_WINDUP     8         // Default range where reset antiwindup is disabled, in tenths of degrees celsius
   #define THERMOSTAT_TEMP_HYSTERESIS            1         // Default range hysteresis for temperature PI controller, in tenths of degrees celsius
   #define THERMOSTAT_TEMP_FROST_PROTECT         40        // Default minimum temperature for frost protection, in tenths of degrees celsius

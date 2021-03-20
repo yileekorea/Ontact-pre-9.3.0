@@ -1009,7 +1009,8 @@ void RulesEverySecond(void)
     if (Rules.timer[i] != 0L) {           // Timer active?
       if (TimeReached(Rules.timer[i])) {  // Timer finished?
         Rules.timer[i] = 0L;              // Turn off this timer
-        if(i == 0) {ExecuteCommand("DisplayBrightness 0", SRC_SWITCH);}  //goodle          
+        if(i == 0) {ExecuteCommand("DisplayBrightness 0", SRC_RULE);}  //goodle          
+        //if(i == 1) {ExecuteCommand("publish stat/%topic%/TempTargetSet %mem16%", SRC_RULE);}  //goodle          
 
         if (Settings.rule_enabled && !Rules.busy) {  // Any rule enabled
           snprintf_P(json_event, sizeof(json_event), PSTR("{\"Rules\":{\"Timer\":%d}}"), i +1);
@@ -2246,6 +2247,7 @@ void Put2Memory(uint32_t index, float for_replace)
 
     dtostrfd(for_replace,1,tempchar); //소수점 1자리
     SettingsUpdateText(SET_MEM1 + index -1, tempchar);
+    Put2RuleTimer(2, 5); //RuleTimer2, after 5 seconds -> publish MQTT tempTargetSetting
 }
 
 void CmndMemory(void)
