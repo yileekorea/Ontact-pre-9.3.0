@@ -156,7 +156,7 @@
 #define D_RESTORE "복구"
 #define D_RETAINED "보류"
 #define D_RULE "규칙"
-#define D_SAVE "저장"
+#define D_SAVE "저장 하기"  //goodle
 #define D_SENSOR "센서"
 #define D_SSID "SSId"
 #define D_START "시작"
@@ -278,8 +278,8 @@
 #define D_SERIAL_IN "Serial In"
 #define D_SERIAL_OUT "Serial Out"
 
-#define D_WIFI_PARAMETERS "Wifi 설정"
-#define D_SCAN_FOR_WIFI_NETWORKS "Wifi 네트워크를 검색.."
+#define D_WIFI_PARAMETERS "WiFi 설정"
+#define D_SCAN_FOR_WIFI_NETWORKS "WiFi 네트워크를 검색.."
 #define D_SCAN_DONE "검색 완료"
 #define D_NO_NETWORKS_FOUND "발견된 네트워크가 없습니다"
 #define D_REFRESH_TO_SCAN_AGAIN "검색 재시도"

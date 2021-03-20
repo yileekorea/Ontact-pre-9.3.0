@@ -310,6 +310,7 @@ enum SettingsTextIndex { SET_OTAURL,
                          SET_STAPWD1, SET_STAPWD2,  // MAX_SSIDS
                          SET_HOSTNAME, SET_SYSLOG_HOST,
                          SET_WEBPWD, SET_CORS,
+                         SET_SCR_TYPE,  //goodle
                          SET_MQTT_HOST, SET_MQTT_CLIENT,
                          SET_MQTT_USER, SET_MQTT_PWD,
                          SET_MQTT_FULLTOPIC, SET_MQTT_TOPIC,

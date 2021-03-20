@@ -288,16 +288,15 @@ void AdcEvery250ms(void) {
     if (ADC_INPUT == Adc[idx].type) {
       uint16_t new_value = AdcRead(Adc[idx].pin, 5);
       if ((new_value < Adc[idx].last_value -ANALOG_PERCENT) || (new_value > Adc[idx].last_value +ANALOG_PERCENT)) {
+        uint16_t avg_value = (new_value+Adc[idx].last_value)/2;
+        if((430 > avg_value)||(470 < avg_value)) {  //w/o ANALOG_PERCENT(10) 
+            Put2TM1637Brightness(5);
+            Serial.print("ADC_AVG_INPUT : ");
+            Serial.println(avg_value);
+        }
         Adc[idx].last_value = new_value;
         uint16_t value = Adc[idx].last_value / ANALOG_PERCENT;
         Response_P(PSTR("{\"ANALOG\":{\"A%ddiv10\":%d}}"), idx + offset, (value > 99) ? 100 : value);
-
-        if((430 > new_value)||(470 < new_value)) {  //w/o ANALOG_PERCENT(10) 
-            Put2TM1637Brightness(5);
-            Serial.print("ADC_INPUT : ");
-            Serial.println(new_value);
-        }
-
         XdrvRulesProcess();
       }
     }
@@ -697,12 +696,12 @@ bool Xsns02(uint8_t function) {
         switch (function) {
 #ifdef USE_RULES
           case FUNC_EVERY_250_MSECOND:
-            //AdcEvery250ms();
+            AdcEvery250ms();
             break;
 #endif  // USE_RULES
           case FUNC_EVERY_SECOND:
             //AdcEverySecond(); //goodle replaced to 250ms task
-            AdcEvery250ms();
+            //AdcEvery250ms();
             break;
           case FUNC_JSON_APPEND:
             AdcShow(1);

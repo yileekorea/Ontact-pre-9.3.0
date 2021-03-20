@@ -265,11 +265,18 @@ const char HTTP_FORM_WIFI[] PROGMEM =
   "<p><label><b>" D_AP1_PASSWORD "</b><input type='checkbox' onclick='sp(\"p1\")'></label><br><input id='p1' type='password' placeholder=\"" D_AP1_PASSWORD "\" value=\"" D_ASTERISK_PWD "\"></p>"
   "<p><b>" D_AP2_SSID "</b> (" STA_SSID2 ")<br><input id='s2' placeholder=\"" STA_SSID2 "\" value=\"%s\"></p>"
   "<p><label><b>" D_AP2_PASSWORD "</b><input type='checkbox' onclick='sp(\"p2\")'></label><br><input id='p2' type='password' placeholder=\"" D_AP2_PASSWORD "\" value=\"" D_ASTERISK_PWD "\"></p>"
-  ;
   //goodle
+  "<label><b>구동기 방식을 확인하세요!</b></label>"
+  "<br>"
+  "<br>"
+  "<INPUT type=\"radio\" id='SCR_type' name=\"SCR_type\" value=\"0\" checked=\"checked\">OPEN형 - 정전시 밸브 열림상태<BR>"
+  "<br>"
+  "<INPUT type=\"radio\" id='SCR_type' name=\"SCR_type\" value=\"1\">CLOSE형 - 정전시 밸브 닫힘상태<BR>"
+  ; //goodle
   //"<p><b>" D_HOSTNAME "</b> (%s)<br><input id='h' placeholder=\"%s\" value=\"%s\"></p>"
-  //"<p><b>" D_CORS_DOMAIN "</b><input id='c' placeholder=\"" CORS_DOMAIN "\" value=\"%s\"></p>";
-
+  //"<p><b>" D_CORS_DOMAIN "</b><input id='c' placeholder=\"" CORS_DOMAIN "\" value=\"%s\"></p>"
+  //;
+  
 const char HTTP_FORM_LOG1[] PROGMEM =
   "<fieldset><legend><b>&nbsp;" D_LOGGING_PARAMETERS "&nbsp;</b>"
   "</legend><form method='get' action='lg'>";
@@ -1781,7 +1788,7 @@ void HandleWifiConfiguration(void)
   if (WifiIsInManagerMode()) {
 #ifndef FIRMWARE_MINIMAL
     WSContentSpaceButton(BUTTON_RESTORE);
-    WSContentButton(BUTTON_RESET_CONFIGURATION);
+    WSContentButton(BUTTON_RESET_CONFIGURATION);  //goodle wifi menu
 #endif  // FIRMWARE_MINIMAL
     WSContentSpaceButton(BUTTON_RESTART);
   } else {
@@ -1809,6 +1816,12 @@ void WifiSaveSettings(void)
   SettingsUpdateText(SET_STAPWD1, (!strlen(tmp)) ? "" : (strlen(tmp) < 5) ? SettingsText(SET_STAPWD1) : tmp);
   WebGetArg(PSTR("p2"), tmp, sizeof(tmp));
   SettingsUpdateText(SET_STAPWD2, (!strlen(tmp)) ? "" : (strlen(tmp) < 5) ? SettingsText(SET_STAPWD2) : tmp);
+  //goodle
+  WebGetArg(PSTR("SCR_type"), tmp, sizeof(tmp));
+  SettingsUpdateText(SET_SCR_TYPE, tmp);
+  Serial.print("SET_SCR_TYPE (0-open, 1-close) : ");
+  Serial.println(SettingsText(SET_SCR_TYPE));
+
   AddLog_P(LOG_LEVEL_INFO, PSTR(D_LOG_WIFI D_CMND_HOSTNAME " %s, " D_CMND_SSID "1 %s, " D_CMND_SSID "2 %s, " D_CMND_CORS " %s"),
     SettingsText(SET_HOSTNAME), SettingsText(SET_STASSID1), SettingsText(SET_STASSID2), SettingsText(SET_CORS));
 }
