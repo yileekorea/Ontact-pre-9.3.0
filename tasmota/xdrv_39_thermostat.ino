@@ -1576,14 +1576,15 @@ void Put2ThermostatOutputRelay(void)  //goodle
   Serial.println(Thermostat[0].temp_measured);
   Serial.println(Thermostat[0].temp_target_level);
 
-  if(Thermostat[0].temp_target_level > Thermostat[0].temp_measured +2){
+  if(Thermostat[0].temp_target_level > Thermostat[0].temp_measured + Thermostat[0].val_prop_band){
     ExecuteCommandPower(0, POWER_ON, SRC_THERMOSTAT);
-  }else{
+  }
+  if(Thermostat[0].temp_target_level < Thermostat[0].temp_measured - Thermostat[0].val_prop_band){
     ExecuteCommandPower(0, POWER_OFF, SRC_THERMOSTAT);
   }
 }
 
-//void Put2TempTargetSet(int16_t temp)
+//void PutTHERMOSTAT_PROP_BANDTempTargetSet(int16_t temp)
 void Put2TempTargetSet(float temp)
 {
 //  int16_t value;

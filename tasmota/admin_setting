@@ -12,9 +12,22 @@ LedPower1 OFF
 LedMask 0x0001
 LedState 1
 
-ButtonTopic 0
-
-
 SetOption43 200
-setOption73 0
-SetOption98 1
+SetOption43	0..255 = to control Rotary step. Details #10407
+
+ButtonTopic 0
+SetOption73 0
+Detach buttons from relays and send multi-press and hold MQTT messages instead
+0 = disabled (default)
+1 = enabled
+Example message: {"Button1":{"Action":"SINGLE"}}
+
+SetOption74	1
+Enable internal pullup for single DS18x20 sensor
+0 = disabled (default)
+1 = internal pullup enabled
+
+SetOption98	1
+Provide rotary dimmer rule triggers
+0 = disabled (default)
+1 = enabled

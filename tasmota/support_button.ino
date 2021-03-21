@@ -314,10 +314,18 @@ void ButtonHandler(void) {
 #ifdef ROTARY_V1
               if (!RotaryButtonPressed(button_index)) {
 #endif
-                if (!Settings.flag3.mqtt_buttons && single_press && SendKey(KEY_BUTTON, button_index + Button.press_counter[button_index], POWER_TOGGLE)) {  // Execute Toggle command via MQTT if ButtonTopic is set
+                //Serial.println("!RotaryButtonPressed");
+                //Serial.println(Settings.flag3.mqtt_buttons );
+                //Serial.println(single_press);
+                //Serial.println(SendKey(KEY_BUTTON, button_index + Button.press_counter[button_index], POWER_TOGGLE));
+
+                if (!Settings.flag3.mqtt_buttons 
+                      && single_press 
+                      && SendKey(KEY_BUTTON, button_index + Button.press_counter[button_index], POWER_TOGGLE)) {  // Execute Toggle command via MQTT if ButtonTopic is set
+                  
                   //Success
-                  Serial.println("button pressed --- 1(single press)");
-                  GetLocalTemperature();
+                  //Serial.println("button pressed --- 1(single press)");
+                  //GetLocalTemperature();
 
                 } else {
                   if (Button.press_counter[button_index] < 6) { // Single to Penta press
@@ -326,12 +334,15 @@ void ButtonHandler(void) {
                     }
                     if (!Settings.flag3.mqtt_buttons) {         // SetOption73 - Detach buttons from relays and enable MQTT action state for multipress
                       if (Button.press_counter[button_index] == 1) {  // By default first press always send a TOGGLE (2)
+      
+                        Serial.println("Button.press_counter[button_index] == 1");
+                        GetLocalTemperature();
 
                         AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_MULTI_PRESS " %d"), button_index +1, Button.press_counter[button_index]);
-
-                        ExecuteCommandPower(button_index + Button.press_counter[button_index], POWER_TOGGLE, SRC_BUTTON);
+                        //comment by goodle
+                        //ExecuteCommandPower(button_index + Button.press_counter[button_index], POWER_TOGGLE, SRC_BUTTON);
                         //ontact
-                        //SendKey(KEY_BUTTON, button_index +1, Button.press_counter[button_index]);    // 2,3,4 and 5 press send just the key value (11,12,13 and 14) for rules
+                        ////SendKey(KEY_BUTTON, button_index +1, Button.press_counter[button_index]);    // 2,3,4 and 5 press send just the key value (11,12,13 and 14) for rules
 
                       } else {
                         SendKey(KEY_BUTTON, button_index +1, Button.press_counter[button_index] +9);    // 2,3,4 and 5 press send just the key value (11,12,13 and 14) for rules
@@ -363,8 +374,9 @@ void ButtonHandler(void) {
                       //Settings.webserver = 2;
                     }
                   }
-                  if (Settings.flag3.mqtt_buttons) {   // SetOption73 (0) - Decouple button from relay and send just mqtt topic
+                  if (Settings.flag3.mqtt_buttons) {   // if SetOption73 (1) - Decouple button from relay and send just mqtt topic
                     if (Button.press_counter[button_index] >= 1 && Button.press_counter[button_index] <= 5) {
+                      //Serial.println("SetOption73 (1) - Decouple button from relay and send just mqtt topic"); //goodle
                       MqttButtonTopic(button_index +1, Button.press_counter[button_index], 0);
 
                     }

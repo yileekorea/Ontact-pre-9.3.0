@@ -252,7 +252,7 @@
 #define D_SECONDS "초"
 #define D_DEVICE_WILL_RESTART "이 장치는 몇 초 후 재시작됩니다"
 #define D_BUTTON_TOGGLE "켜기/끄기"
-#define D_CONFIGURATION "설정 메뉴"
+#define D_CONFIGURATION "상세 설정"
 #define D_INFORMATION "정보"
 #define D_FIRMWARE_UPGRADE "펌웨어 업그레이드"
 #define D_CONSOLE "콘솔"
