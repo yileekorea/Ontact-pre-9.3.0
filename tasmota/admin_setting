@@ -1,0 +1,20 @@
+
+
+
+Rule1 
+ON Power1#boot DO Backlog SensorInputSet 1; ThermostatModeSet 1; TempTargetSet %mem16%; TimePiCycleSet 5; TimeMaxActionSet 2; TimeMinActionSet 1; RuleTimer1 30 ENDON
+ON Rules#Timer=2 DO Backlog publish stat/%topic%/TempTargetSet %mem16% ENDON
+
+ON Power1#boot DO Backlog SensorInputSet 1; ThermostatModeSet 1; TempTargetSet %mem16%; TimePiCycleSet 30; TimeMaxActionSet 10; TimeMinActionSet 5; RuleTimer1 30 ENDON
+
+
+LedPower1 OFF
+LedMask 0x0001
+LedState 1
+
+ButtonTopic 0
+
+
+SetOption43 200
+setOption73 0
+SetOption98 1

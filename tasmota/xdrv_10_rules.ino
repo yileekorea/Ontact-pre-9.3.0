@@ -1010,7 +1010,8 @@ void RulesEverySecond(void)
       if (TimeReached(Rules.timer[i])) {  // Timer finished?
         Rules.timer[i] = 0L;              // Turn off this timer
         if(i == 0) {ExecuteCommand("DisplayBrightness 0", SRC_RULE);}  //goodle          
-        //if(i == 1) {ExecuteCommand("publish stat/%topic%/TempTargetSet %mem16%", SRC_RULE);}  //goodle          
+        //if(i == 1) {ExecuteCommand("publish stat/%topic%/TempTargetSet %mem16%", SRC_RULE);}  //done at the Rule1
+        if(i == 1) {Put2ThermostatOutputRelay();}  //goodle          
 
         if (Settings.rule_enabled && !Rules.busy) {  // Any rule enabled
           snprintf_P(json_event, sizeof(json_event), PSTR("{\"Rules\":{\"Timer\":%d}}"), i +1);

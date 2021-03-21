@@ -591,6 +591,7 @@ void ThermostatOutputRelay(uint8_t ctr_output, uint32_t command)
     && (Thermostat[ctr_output].status.status_output == IFACE_OFF)) {
 //#ifndef DEBUG_THERMOSTAT
     if (Thermostat[ctr_output].status.enable_output == IFACE_ON) {
+      //Serial.println("IFACE_ON");
       ExecuteCommandPower(Thermostat[ctr_output].status.output_relay_number, POWER_ON, SRC_THERMOSTAT);
     }
 //#endif // DEBUG_THERMOSTAT
@@ -605,6 +606,7 @@ void ThermostatOutputRelay(uint8_t ctr_output, uint32_t command)
   else if ((command == IFACE_OFF) && (Thermostat[ctr_output].status.status_output == IFACE_ON)) {
 //#ifndef DEBUG_THERMOSTAT
     if (Thermostat[ctr_output].status.enable_output == IFACE_ON) {
+      //Serial.println("IFACE_OFF");
       ExecuteCommandPower(Thermostat[ctr_output].status.output_relay_number, POWER_OFF, SRC_THERMOSTAT);
     }
 //#endif // DEBUG_THERMOSTAT
@@ -801,9 +803,9 @@ void ThermostatCalculatePI(uint8_t ctr_output)
 void ThermostatWorkAutomaticPI(uint8_t ctr_output)
 {
   bool flag_heating = (Thermostat[ctr_output].status.climate_mode == CLIMATE_HEATING);
-  if ( (TasmotaGlobal.uptime >= Thermostat[ctr_output].time_ctr_checkpoint)
+  if ((TasmotaGlobal.uptime >= Thermostat[ctr_output].time_ctr_checkpoint)
     || (Thermostat[ctr_output].temp_target_level != Thermostat[ctr_output].temp_target_level_ctr)
-    || (  (( (Thermostat[ctr_output].temp_measured < Thermostat[ctr_output].temp_target_level)
+    || ((((Thermostat[ctr_output].temp_measured < Thermostat[ctr_output].temp_target_level)
           && (Thermostat[ctr_output].temp_measured_gradient < 0)
           && (flag_heating))
         || ((Thermostat[ctr_output].temp_measured > Thermostat[ctr_output].temp_target_level)
@@ -1568,8 +1570,21 @@ void CmndTempMeasuredSet(void)
   }
 }
 
-//void PutTempTargetSet(int16_t temp)
-void PutTempTargetSet(float temp)
+//void Put2ThermostatOutputRelay(uint8_t ctr_output, uint32_t command)
+void Put2ThermostatOutputRelay(void)  //goodle
+{
+  Serial.println(Thermostat[0].temp_measured);
+  Serial.println(Thermostat[0].temp_target_level);
+
+  if(Thermostat[0].temp_target_level > Thermostat[0].temp_measured +2){
+    ExecuteCommandPower(0, POWER_ON, SRC_THERMOSTAT);
+  }else{
+    ExecuteCommandPower(0, POWER_OFF, SRC_THERMOSTAT);
+  }
+}
+
+//void Put2TempTargetSet(int16_t temp)
+void Put2TempTargetSet(float temp)
 {
 //  int16_t value;
   float value;

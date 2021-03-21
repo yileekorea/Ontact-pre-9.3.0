@@ -289,7 +289,8 @@ void AdcEvery250ms(void) {
       uint16_t new_value = AdcRead(Adc[idx].pin, 5);
       if ((new_value < Adc[idx].last_value -ANALOG_PERCENT) || (new_value > Adc[idx].last_value +ANALOG_PERCENT)) {
         uint16_t avg_value = (new_value+Adc[idx].last_value)/2;
-        if((430 > avg_value)||(470 < avg_value)) {  //w/o ANALOG_PERCENT(10) 
+        //if((430 > avg_value)||(470 < avg_value)) {  //w/o ANALOG_PERCENT(10) 
+        if((350 > avg_value)||(500 < avg_value)) {  //w/o ANALOG_PERCENT(10) 
             Put2TM1637Brightness(5);
             Serial.print("ADC_AVG_INPUT : ");
             Serial.println(avg_value);

@@ -268,7 +268,8 @@
 #define D_RESET_CONFIGURATION "설정 초기화"
 #define D_BACKUP_CONFIGURATION "설정 백업"
 #define D_RESTORE_CONFIGURATION "설정 복구"
-#define D_MAIN_MENU "메인 메뉴"
+//#define D_MAIN_MENU "메인 메뉴"
+#define D_MAIN_MENU "홈 메뉴"
 
 #define D_MODULE_PARAMETERS "모듈 설정"
 #define D_MODULE_TYPE "모듈 타입"

@@ -203,7 +203,7 @@ void RotaryHandler(void) {
     noInterrupts();
     int rotary_position = Encoder[index].position - rotary_offset;
     Encoder[index].position = rotary_offset;
-    PutTempTargetSet(rotary_position);
+    Put2TempTargetSet(rotary_position);
     interrupts();
 
     if (Settings.save_data && (TasmotaGlobal.save_data_counter < 2)) {
