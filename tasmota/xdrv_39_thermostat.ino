@@ -1569,13 +1569,37 @@ void CmndTempMeasuredSet(void)
     ResponseCmndFloat((float)value / 10, 1);
   }
 }
+// goodle off the thermostat
+void Put2ThermostatTurnup(void)
+{
+  if(Thermostat[0].status.thermostat_mode == THERMOSTAT_OFF){
+    Thermostat[0].status.thermostat_mode = THERMOSTAT_AUTOMATIC_OP;
+    //Put2ThermostatOutputRelay();  //this will direct control
+    Put2RuleTimer(2, 5); //RuleTimer2, after 5 seconds -> publish MQTT tempTargetSetting
+  }else{
+    return;
+  }
+}
 
-//void Put2ThermostatOutputRelay(uint8_t ctr_output, uint32_t command)
+void Put2ThermostatShutdown(void)
+{
+  // triple button push to THERMOSTAT_OFF
+  Thermostat[0].status.thermostat_mode = THERMOSTAT_OFF;
+  Thermostat[0].status.command_output = IFACE_OFF;
+  if (Thermostat[0].status.enable_output == IFACE_ON) {
+    ThermostatOutputRelay(0, Thermostat[0].status.command_output);
+  }
+}
+
 void Put2ThermostatOutputRelay(void)  //goodle
 {
-  Serial.println(Thermostat[0].temp_measured);
-  Serial.println(Thermostat[0].temp_target_level);
-
+  //Serial.println(Thermostat[0].temp_measured);
+  //Serial.println(Thermostat[0].temp_target_level);
+  if(Thermostat[0].status.thermostat_mode == THERMOSTAT_OFF ){
+    ExecuteCommandPower(0, POWER_OFF, SRC_THERMOSTAT);
+    return;
+  }
+  
   if(Thermostat[0].temp_target_level > Thermostat[0].temp_measured + Thermostat[0].val_prop_band){
     ExecuteCommandPower(0, POWER_ON, SRC_THERMOSTAT);
   }

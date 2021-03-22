@@ -336,7 +336,8 @@ void ButtonHandler(void) {
                       if (Button.press_counter[button_index] == 1) {  // By default first press always send a TOGGLE (2)
       
                         Serial.println("Button.press_counter[button_index] == 1");
-                        GetLocalTemperature();
+                        GetLocalTemperature();  //goodle get out temperature
+                        Put2ThermostatTurnup(); //check thermostat is OFF state then turn up
 
                         AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_MULTI_PRESS " %d"), button_index +1, Button.press_counter[button_index]);
                         //comment by goodle
@@ -346,7 +347,11 @@ void ButtonHandler(void) {
 
                       } else {
                         SendKey(KEY_BUTTON, button_index +1, Button.press_counter[button_index] +9);    // 2,3,4 and 5 press send just the key value (11,12,13 and 14) for rules
-                        AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_MULTI_PRESS " %d"), button_index +1, Button.press_counter[button_index] +9);
+                        AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_APPLICATION D_BUTTON "%d " D_MULTI_PRESS " upper" " %d"), button_index +1, Button.press_counter[button_index] +9);
+                        //goodle
+                        if(Button.press_counter[button_index] + 9 == 12){ //goodle Thermostat shytdown when triple push
+                          Put2ThermostatShutdown();
+                        }
 
                         if (0 == button_index) {               // BUTTON1 can toggle up to 5 relays if present. If a relay is not present will send out the key value (2,11,12,13 and 14) for rules
                           bool valid_relay = PinUsed(GPIO_REL1, Button.press_counter[button_index]-1);
