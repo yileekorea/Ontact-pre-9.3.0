@@ -511,7 +511,7 @@ void CmndLatitude(void)
 #define WEB_HANDLE_TIMER "tm"
 
 const char HTTP_BTN_MENU_TIMER[] PROGMEM =
-  "<p><form action='" WEB_HANDLE_TIMER "' method='get'><button>" D_CONFIGURE_TIMER "</button></form></p>";
+  "<p><form action='" WEB_HANDLE_TIMER "' method='get'><button>" ""D_CONFIGURE_TIMER  "</button></form></p>";
 
 #ifdef USE_UNISHOX_COMPRESSION
 const size_t HTTP_TIMER_SCRIPT1_SIZE = 106;
@@ -918,7 +918,7 @@ bool Xdrv09(uint8_t function)
 #ifdef USE_TIMERS_WEB
     case FUNC_WEB_ADD_BUTTON:
 #if defined(USE_RULES) || defined(USE_SCRIPT)
-      WSContentSend_P(HTTP_BTN_MENU_TIMER);
+      WSContentSend_P(HTTP_BTN_MENU_TIMER); //google USE_TIMERS_WEB disable
 #else
       if (TasmotaGlobal.devices_present) { WSContentSend_P(HTTP_BTN_MENU_TIMER); }
 #endif  // USE_RULES
